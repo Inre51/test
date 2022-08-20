@@ -5,18 +5,23 @@ import os
 from os import walk
 import yara
 
-def yara_match_from_file(fileyara, filename): # yara_match_from_file함수 매개변수 (fileyara, filename)
-	matches = []  # 리스트
-	rules = yara.compile(fileyara) # rules 파일 컴파일
+def yara_match_from_file(fileyara, filename):
+# 파일에서 yara 인지 확인하는 함수
+# matches 딕셔러니
+	matches = []
+	rules = yara.compile(fileyara)
 
-	# serialize matches ,예외 처리
+	# serialize matches
+# rules.match(filename)안에 match 만큼 반복실행하여 예외 발생시 회피 아닐시 matches로 반환
+# matches에 문자열 match 객체 추가
+# return matches, type : str
 	try:
-		for match in rules.match(filename): # rules.match(filename) 요소들 match에 대입
-			matches.append(str(match)) # matches에 문자열 match 객체로 추가
-	except: # fix yara.Error: internal error: 30 ,오류 종류 상관없이 오류가 발생하면 수행
-		pass # 예외 처리하지않고 회피
+		for match in rules.match(filename):
+			matches.append(str(match))
+	except: # fix yara.Error: internal error: 30
+		pass
 
-	return matches # matches로 반환
+	return matches
 
 def yara_match_from_folder(folder_yara, filename, exclude=[]): # yara_match_from_folder 함수 매개변수 (folder_yara, filename, exclude=[])
 	matches = [] # 리스트
